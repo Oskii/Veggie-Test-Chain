@@ -5,8 +5,10 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include <math.h>
 #include <cmath>
+#include "chain.h"
 #include "chainparams.h"
 #include "consensus/merkle.h"
+#include "validation.h"
 
 #include "tinyformat.h"
 #include "util.h"
@@ -20,7 +22,7 @@
 
 #include "chainparamsseeds.h"
 
-#define GENESIS_TIME 1516020141
+#define GENESIS_TIME 1512570046
 #define GENESIS_DIFFICULTY 0x1e7fffff
 
 void MineGenesisBlock(CBlock &genesis);
@@ -33,7 +35,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& script
     txNew.vout.resize(1);
 
     unsigned int height = 0;
-    
+
     txNew.vin[0].scriptSig = CScript() << height << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = scriptPubKey;
@@ -58,9 +60,9 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& script
 
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "Veggie Test Version 2";
+    const char* pszTimestamp = "iNews.co.uk 29/11/17 Animals do have feelings - and here's the science to prove it";
     const CScript scriptPubKey = CScript() << ParseHex("03facfdfc22816528518884608350d828e1403dd142d2276303b5b6da7a8b854a1") << OP_CHECKSIG;
-      
+
     return CreateGenesisBlock(pszTimestamp, scriptPubKey, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -85,11 +87,11 @@ public:
         consensus.BIP65Height = 0;
         consensus.BIP66Height = 0;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // 2 weeks
+        consensus.nPowTargetSpacing = 10 * 60;   // 10 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = std::ceil(consensus.nMinerConfirmationWindow * 0.95); // 95% of nMinerConfirmationWindow	0
+        consensus.nRuleChangeActivationThreshold = std::ceil(consensus.nMinerConfirmationWindow * 0.95); // 95% of nMinerConfirmationWindow 0
         consensus.nMinerConfirmationWindow = consensus.nPowTargetTimespan / consensus.nPowTargetSpacing;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
@@ -120,25 +122,23 @@ public:
         pchMessageStart[1] = 0xbd;
         pchMessageStart[2] = 0xbe;
         pchMessageStart[3] = 0xd8;
-        nDefaultPort = 21736; //maybe 22717
+        nDefaultPort = 22836; //maybe 22717
         nPruneAfterHeight = 100000;
-        
+
         printf("MAIN NET ========================================================= \n");
 
         //genesis = CreateGenesisBlock(GENESIS_TIME, 2317582475, GENESIS_DIFFICULTY, 1, 50 * COIN);
-        genesis = CreateGenesisBlock(GENESIS_TIME, 2317978777, GENESIS_DIFFICULTY, 1, 50 * COIN);
-    	
-        //MineGenesisBlock(genesis);
-    	
-        std::cout << "HELLO" << std::endl;
+        genesis = CreateGenesisBlock(GENESIS_TIME, 2317976953, GENESIS_DIFFICULTY, 1, 50 * COIN);
 
-    	consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000003e349ed71475647db6dd13345887b02d96c54be400f65a18a4ea2dc23bf"));
-        assert(genesis.hashMerkleRoot == uint256S("0x8035437aa3c60c44efe727e3f0017ba220ae7d2f77832bb356abdadbc40437f2"));
+        //MineGenesisBlock(genesis);
+
+        consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0x0000794e30ec87650feebfdc5c39c51927ebb8407129ed5e93375dd825e50380"));
+        assert(genesis.hashMerkleRoot == uint256S("0xf3209004efc0514df1c566add7764437d66e0ffaf87cdb6dc88b2c1453ebdc22"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.push_back(CDNSSeedData("45.63.111.147", "45.77.72.77"));
-        //vSeeds.push_back(CDNSSeedData("45.77.72.77" /*Brazil Seed 1*/));
+        vSeeds.push_back(CDNSSeedData("45.32.79.230" /*Carrot*/, "207.246.105.211" /*Avocado*/));
+        vSeeds.push_back(CDNSSeedData("45.77.72.77" /*Brazil Seed 1*/, "45.63.111.147" /*Brazil Seed 2*/));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,45); //55
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -155,13 +155,19 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-	    ( 0, uint256S("0x"))
+        ( 0, uint256S("0x"))
         };
 
         chainTxData = ChainTxData{
         };
 
         printf("Main net genesis: genesis is verified. \n");
+    }
+
+    void UpdateDifficultyAdjustmentParameters(int64_t nPowTargetSpacing, int64_t nPowTargetTimespan)
+    {
+        consensus.nPowTargetSpacing = nPowTargetSpacing;
+        consensus.nPowTargetTimespan = nPowTargetTimespan;
     }
 };
 static CMainParams mainParams;
@@ -209,22 +215,22 @@ public:
         pchMessageStart[1] = 0x12;
         pchMessageStart[2] = 0x08;
         pchMessageStart[3] = 0x06;
-        nDefaultPort = 32718;
+        nDefaultPort = 32818;
         nPruneAfterHeight = 1000;
-        
+
         printf("TEST NET ========================================================= \n");
 
-        genesis = CreateGenesisBlock(GENESIS_TIME, 44148540, GENESIS_DIFFICULTY, 1, 50 * COIN);
-	    
+        genesis = CreateGenesisBlock(GENESIS_TIME, 44075569, GENESIS_DIFFICULTY, 1, 50 * COIN);
+
         //MineGenesisBlock(genesis);
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00007310370390ccddb367e06af9b6652dfec68052ab319dc6b594d13b8d1c9b"));
-        assert(genesis.hashMerkleRoot == uint256S("0x8035437aa3c60c44efe727e3f0017ba220ae7d2f77832bb356abdadbc40437f2"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00001435d4504da70dd1ab10c09e0439b69807d6145c1322b15bb932e5cae03e"));
+        assert(genesis.hashMerkleRoot == uint256S("0xf3209004efc0514df1c566add7764437d66e0ffaf87cdb6dc88b2c1453ebdc22"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
-       
+
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
@@ -241,7 +247,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-	    ( 0, uint256S("0x"))
+        ( 0, uint256S("0x"))
         };
 
         chainTxData = ChainTxData{
@@ -291,19 +297,19 @@ public:
         pchMessageStart[1] = 0xbf;
         pchMessageStart[2] = 0xb5;
         pchMessageStart[3] = 0xda;
-        nDefaultPort = 42718;
+        nDefaultPort = 42818;
         nPruneAfterHeight = 1000;
 
         printf("REGTEST NET ========================================================= \n");
 
 
-	genesis = CreateGenesisBlock(GENESIS_TIME, 916866106, GENESIS_DIFFICULTY, 1, 50 * COIN);
-	
+        genesis = CreateGenesisBlock(GENESIS_TIME, 916716142, GENESIS_DIFFICULTY, 1, 50 * COIN);
+
         //MineGenesisBlock(genesis);
- 
+
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000032b49b8bf4c5fcf7cdf717a94dfd28ff4e3136ddcb65ce13e4c1b76acef6"));
-        assert(genesis.hashMerkleRoot == uint256S("0x8035437aa3c60c44efe727e3f0017ba220ae7d2f77832bb356abdadbc40437f2"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00002e473d4f041791f930d9d51419e4b35d5203457c64ac922680cc9b10962c"));
+        assert(genesis.hashMerkleRoot == uint256S("0xf3209004efc0514df1c566add7764437d66e0ffaf87cdb6dc88b2c1453ebdc22"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -315,7 +321,7 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-	    ( 0, uint256S("0x"))
+        ( 0, uint256S("0x"))
         };
 
         chainTxData = ChainTxData{
@@ -372,31 +378,43 @@ void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime,
 {
     regTestParams.UpdateBIP9Parameters(d, nStartTime, nTimeout);
 }
- 
+
 void MineGenesisBlock(CBlock &genesis)
 {
   arith_uint256 best = arith_uint256();
   int n=0;
-  
+
   arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
   while (UintToArith256(genesis.GetHash()) > hashTarget) {
-    
+
     arith_uint256 c=UintToArith256(genesis.GetHash());
-    
+
     if(c < best || n==0)
       {
-	best = c;
-	n=1;
-	
+    best = c;
+    n=1;
+
     printf("%s %s %s\n",genesis.GetHash().GetHex().c_str(),hashTarget.GetHex().c_str(),
-	       best.GetHex().c_str()); 
+           best.GetHex().c_str());
       }
-    
+
     ++genesis.nNonce;
     if (genesis.nNonce == 0) { ++genesis.nTime; }
   }
-  
+
   //printf("HASH IS: %s\n", UintToArith256(genesis.GetHash()).ToString().c_str());
 
-  printf("Converting genesis hash to string: %s\n",genesis.ToString().c_str());	
+  printf("Converting genesis hash to string: %s\n",genesis.ToString().c_str());
+}
+
+
+void SetDifficultyAdjustmentParams(int nHeight)
+{
+    std::cout << "chainActive height is: " << nHeight << std::endl;
+    if (nHeight >= 200) {
+        int64_t modifiedPowTargetTimespan = 10 * 60; // 10 minutes
+        int64_t modifiedPowTargetSpacing = 1 * 60;   // 1 minute
+
+        mainParams.UpdateDifficultyAdjustmentParameters(modifiedPowTargetSpacing, modifiedPowTargetTimespan);
+    }
 }

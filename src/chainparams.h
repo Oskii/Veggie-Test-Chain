@@ -119,4 +119,9 @@ void SelectParams(const std::string& chain);
  */
 void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
+/**
+* Select different values for difficulty adjustment
+*/
+void SetDifficultyAdjustmentParams(int nHeight);
+
 #endif // BITCOIN_CHAINPARAMS_H

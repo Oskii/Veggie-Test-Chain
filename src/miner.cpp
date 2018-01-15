@@ -157,6 +157,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     CBlockIndex* pindexPrev = chainActive.Tip();
     nHeight = pindexPrev->nHeight + 1;
 
+    SetDifficultyAdjustmentParams(nHeight);
+
     pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus());
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
@@ -198,7 +200,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout.resize(2); // 2 outputs, 1 for us, 1 for them.
     coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
 
-    std::string developerWallet = "KFDc3DLyymMkZajpksc5HLtNw5GBUWmtTh";
+    std::string developerWallet = "KJpyfLPSN9BmzH27otc95ApRM6VV4gSubv";
     CTxDestination developerWalletDest = CBitcoinAddress(developerWallet).Get(); 
     CScript developerCScript = GetScriptForDestination(developerWalletDest);
 
