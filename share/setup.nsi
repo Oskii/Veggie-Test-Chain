@@ -5,16 +5,16 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.1.0
+!define VERSION 0.1.1
 !define COMPANY "Veggie project"
 !define URL https://Veggie.org/
 
 # MUI Symbol Definitions
-!define MUI_ICON "/home/a/Veggie/share/pixmaps/Veggie.ico"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "/home/a/Veggie/share/pixmaps/nsis-wizard.bmp"
+!define MUI_ICON "/home/c/TestVeggie2/Veggie-Test-Chain/share/pixmaps/Veggie.ico"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "/home/c/TestVeggie2/Veggie-Test-Chain/share/pixmaps/nsis-wizard.bmp"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
-!define MUI_HEADERIMAGE_BITMAP "/home/a/Veggie/share/pixmaps/nsis-header.bmp"
+!define MUI_HEADERIMAGE_BITMAP "/home/c/TestVeggie2/Veggie-Test-Chain/share/pixmaps/nsis-header.bmp"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
 !define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
@@ -22,7 +22,7 @@ SetCompressor /SOLID lzma
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Veggie"
 !define MUI_FINISHPAGE_RUN $INSTDIR\Veggie-qt
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "/home/a/Veggie/share/pixmaps/nsis-wizard.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "/home/c/TestVeggie2/Veggie-Test-Chain/share/pixmaps/nsis-wizard.bmp"
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 
 # Included files
@@ -48,7 +48,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile /home/a/Veggie/Veggie-${VERSION}-win-setup.exe
+OutFile /home/c/TestVeggie2/Veggie-Test-Chain/Veggie-${VERSION}-win-setup.exe
 !if "" == "64"
 InstallDir $PROGRAMFILES64\Bitcoin
 !else
@@ -73,14 +73,14 @@ ShowUninstDetails show
 Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
-    File /home/a/Veggie/release/Veggie-qt
-    File /oname=COPYING.txt /home/a/Veggie/COPYING
-    File /oname=readme.txt /home/a/Veggie/doc/README_windows.txt
+    File /home/c/TestVeggie2/Veggie-Test-Chain/release/Veggie-qt
+    File /oname=COPYING.txt /home/c/TestVeggie2/Veggie-Test-Chain/COPYING
+    File /oname=readme.txt /home/c/TestVeggie2/Veggie-Test-Chain/doc/README_windows.txt
     SetOutPath $INSTDIR\daemon
-    File /home/a/Veggie/release/Veggied
-    File /home/a/Veggie/release/Veggie-cli
+    File /home/c/TestVeggie2/Veggie-Test-Chain/release/Veggied
+    File /home/c/TestVeggie2/Veggie-Test-Chain/release/Veggie-cli
     SetOutPath $INSTDIR\doc
-    File /r /home/a/Veggie/doc\*.*
+    File /r /home/c/TestVeggie2/Veggie-Test-Chain/doc\*.*
     SetOutPath $INSTDIR
     WriteRegStr HKCU "${REGKEY}\Components" Main 1
 SectionEnd

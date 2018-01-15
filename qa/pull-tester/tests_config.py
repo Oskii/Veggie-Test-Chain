@@ -3,8 +3,8 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-SRCDIR="/home/a/Veggie"
-BUILDDIR="/home/a/Veggie"
+SRCDIR="/home/c/TestVeggie2/Veggie-Test-Chain"
+BUILDDIR="/home/c/TestVeggie2/Veggie-Test-Chain"
 EXEEXT=""
 
 # These will turn into comments if they were disabled when configuring.
