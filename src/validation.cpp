@@ -3011,6 +3011,12 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 {
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
     // Check proof of work
+    std::cout << "block.nBits: " << block.nBits << std::endl;
+    std::cout << "Which is compared to: " << GetNextWorkRequired(pindexPrev, &block, consensusParams) << std::endl;
+    std::cout << "nHeight: " << nHeight << std::endl;
+    
+    if(nHeight == 200) return true; //Difficulty change at block height 200
+
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
